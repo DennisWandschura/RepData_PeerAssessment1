@@ -64,6 +64,7 @@ stepsPerDayMedian
 ## [1] 10765
 ```
 
+
 ## What is the average daily activity pattern?
 Make a time series plot (i.e.  type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
@@ -117,13 +118,17 @@ for (idx in 1:dim(avgStepsPerInterval)[1])
 With my *intervallArray* vector i have fast access to the mean-values and save the new data in the new table *filledActivityData*.
 
 ``` r
-filledActivityData <- activityData %>% mutate(steps = replace_na(steps, intervallArray[(interval/5) + 1]))
+filledActivityData <- activityData %>% 
+  mutate(steps = replace_na(steps, intervallArray[(interval/5) + 1]))
 ```
 
 Like with the unfilled data i print the histogram of the step-counts.
 
 ``` r
-filledStepsPerDay <- filledActivityData %>% group_by(date) %>% summarise(stepsperday = sum(steps))
+filledStepsPerDay <- filledActivityData %>% 
+  group_by(date) %>% 
+  summarise(stepsperday = sum(steps))
+
 ghist2 <- ggplot(filledStepsPerDay, aes(stepsperday))
 ghist2 + geom_histogram() + labs(x = "Steps per day", y = "Count", title = "Histogramm of steps for each day (filled).")
 ```
@@ -145,7 +150,7 @@ filledMean
 ## [1] 10766.19
 ```
 
-There is no difference to the mean of the unfilled data, no surprise here because we used the 50%-quantile for filling:
+There is no difference to the mean of the unfilled data:
 
 ``` r
 filledMean - stepsPerDayMean
@@ -165,16 +170,24 @@ filledMedian
 ```
 ## [1] 10766.19
 ```
-There is a slight difference of filled and unfilled median. Reason is there are more values that are being used to compute the median.
+
 
 ``` r
 diffMedian <- filledMedian - stepsPerDayMedian
-diffMedianPercent <- (diffMedian/ stepsPerDayMedian) * 100.0
 diffMedian
 ```
 
 ```
 ## [1] 1.188679
+```
+
+``` r
+diffMedianPercent <- (diffMedian/ stepsPerDayMedian) * 100.0
+diffMedianPercent
+```
+
+```
+## [1] 0.01104207
 ```
 Because there is no difference in the man and only 0.0110421% for the median there should be no impact on further analysis.
 

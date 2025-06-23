@@ -420,10 +420,14 @@ intervallArray &lt;- seq(from = 0, to = 0, length.out = (intervalRange[2]/5))</c
 <p>With my <em>intervallArray</em> vector i have fast access to the
 mean-values and save the new data in the new table
 <em>filledActivityData</em>.</p>
-<pre class="r"><code>filledActivityData &lt;- activityData %&gt;% mutate(steps = replace_na(steps, intervallArray[(interval/5) + 1]))</code></pre>
+<pre class="r"><code>filledActivityData &lt;- activityData %&gt;% 
+  mutate(steps = replace_na(steps, intervallArray[(interval/5) + 1]))</code></pre>
 <p>Like with the unfilled data i print the histogram of the
 step-counts.</p>
-<pre class="r"><code>filledStepsPerDay &lt;- filledActivityData %&gt;% group_by(date) %&gt;% summarise(stepsperday = sum(steps))
+<pre class="r"><code>filledStepsPerDay &lt;- filledActivityData %&gt;% 
+  group_by(date) %&gt;% 
+  summarise(stepsperday = sum(steps))
+
 ghist2 &lt;- ggplot(filledStepsPerDay, aes(stepsperday))
 ghist2 + geom_histogram() + labs(x = &quot;Steps per day&quot;, y = &quot;Count&quot;, title = &quot;Histogramm of steps for each day (filled).&quot;)</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
@@ -432,20 +436,19 @@ ghist2 + geom_histogram() + labs(x = &quot;Steps per day&quot;, y = &quot;Count&
 <pre class="r"><code>filledMean &lt;- mean(filledStepsPerDay$stepsperday)
 filledMean</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
-<p>There is no difference to the mean of the unfilled data, no surprise
-here because we used the 50%-quantile for filling:</p>
+<p>There is no difference to the mean of the unfilled data:</p>
 <pre class="r"><code>filledMean - stepsPerDayMean</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>Median of the total steps:</p>
 <pre class="r"><code>filledMedian &lt;- median(filledStepsPerDay$stepsperday)
 filledMedian</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
-<p>There is a slight difference of filled and unfilled median. Reason is
-there are more values that are being used to compute the median.</p>
 <pre class="r"><code>diffMedian &lt;- filledMedian - stepsPerDayMedian
-diffMedianPercent &lt;- (diffMedian/ stepsPerDayMedian) * 100.0
 diffMedian</code></pre>
 <pre><code>## [1] 1.188679</code></pre>
+<pre class="r"><code>diffMedianPercent &lt;- (diffMedian/ stepsPerDayMedian) * 100.0
+diffMedianPercent</code></pre>
+<pre><code>## [1] 0.01104207</code></pre>
 <p>Because there is no difference in the man and only 0.0110421% for the
 median there should be no impact on further analysis.</p>
 </div>
